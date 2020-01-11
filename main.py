@@ -1,4 +1,4 @@
-from get_bank_of_america import get_bank_of_america
+from bank_rates import get_bank_of_america
 
 
 principal_amount = input("enter the principal amount: ")  
