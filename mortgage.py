@@ -58,3 +58,4 @@ with open('rates.csv', "w", newline=' ') as rates:
 	writer = csv.writer(rates)
 	writer.writerow(["30 year rate"])
 	writer.writerow([thirty_y])
+#algum
