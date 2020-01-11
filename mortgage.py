@@ -54,7 +54,7 @@ thirty_y = rates[1].text  # get the 2nd text as its the 30y
 
 driver.close()
 
-with open('rates.csv', "w", newline=' ') as rates:
+with open('rates.csv', mode="w") as rates:
 	writer = csv.writer(rates)
 	writer.writerow(["30 year rate"])
 	writer.writerow([thirty_y])
