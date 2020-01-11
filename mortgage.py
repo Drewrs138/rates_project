@@ -23,7 +23,7 @@ def extension():
 		return ".exe"  # Windows...
 
 
-driver_path = os.path.join(getcwd(), ('chromedriver' + extension()))  # get directory in which python script and webdriver are and get the right format for chrome webdriver
+driver_path = os.path.join(os.getcwd(), ('chromedriver' + extension()))  # get directory in which python script and webdriver are and get the right format for chrome webdriver
 
 driver = Chrome(driver_path, options=chrome_options)
 
@@ -54,7 +54,7 @@ thirty_y = rates[1].text  # get the 2nd text as its the 30y
 
 driver.close()
 
-with open('rates.csv', "w", newline='') as rates:
+with open('rates.csv', "w", newline=' ') as rates:
 	writer = csv.writer(rates)
 	writer.writerow(["30 year rate"])
 	writer.writerow([thirty_y])
