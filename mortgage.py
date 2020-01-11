@@ -10,22 +10,25 @@ principal_amount = input("enter the principal amount: ")
 
 down_payment = input("enter the down payment: ")
 
-chrome_options = Options()
+# chrome_options = Options()
 
-chrome_options.add_argument("--headless")  # option to not open browser when scraping 
+# chrome_options.add_argument("--headless")  # option to not open browser when scraping 
+
 
 def extension():
 	if platform == "linux" or platform == "linux2":
-		return ""  #linux2
-	elif platform == "darwin":
+		return ""
+	if platform == "darwin":
 		return ""  # OS X
 	elif platform == "win32":
 		return ".exe"  # Windows...
 
 
-driver_path = os.path.join(getcwd(), ('chromedriver' + extension()))  # get directory in which python script and webdriver are and get the right format for chrome webdriver
+driver_path = os.path.join(os.getcwd(), ('chromedriver' + extension()))  # get directory in which python script and webdriver are and get the right format for chrome webdriver
 
-driver = Chrome(driver_path, options=chrome_options)
+# driver = Chrome(driver_path, options=chrome_options)
+
+driver = Chrome(driver_path)
 
 url = "https://www.bankofamerica.com/mortgage/mortgage-rates/"
 
