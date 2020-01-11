@@ -16,11 +16,12 @@ chrome_options.add_argument("--headless")  # option to not open browser when scr
 
 def extension():
 	if platform == "linux" or platform == "linux2":
-    	return  #linux2
+		return ""  #linux2
 	elif platform == "darwin":
-    	return  # OS X
+		return ""  # OS X
 	elif platform == "win32":
-    	return ".exe"  # Windows...
+		return ".exe"  # Windows...
+
 
 driver_path = os.path.join(getcwd(), ('chromedriver' + extension()))  # get directory in which python script and webdriver are and get the right format for chrome webdriver
 
