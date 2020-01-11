@@ -1,9 +1,10 @@
-from selenium.webdriver import Chrome
 import csv
-import time
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
 import os
+import time
+from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keysd
+
 
 principal_amount = input("enter the principal amount: ")
 
