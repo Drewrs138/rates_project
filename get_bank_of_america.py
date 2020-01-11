@@ -24,7 +24,7 @@ def get_bank_of_america(principal_amount, down_payment, path):
     rates = driver.find_elements_by_class_name("update-partial")  # find all text that changes with the update button
     thirty_y = rates[1].text  # get the 2nd text as its the 30y 
     driver.close()
-    with open(path, mode="w") as rates:
+    with open(path, mode="a") as rates:
         writer = csv.writer(rates)
         writer.writerow(["30 year rate"])
         writer.writerow([thirty_y])
