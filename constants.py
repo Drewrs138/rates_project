@@ -13,4 +13,6 @@ def _extension():
 
 # get directory in which python script and webdriver are and 
 # get the right format for chrome webdriver
-DRIVER_PATH = os.path.join(os.getcwd(), ('chromedriver' + _extension()))  
+DRIVER_PATH = os.path.join(os.getcwd(), ('chromedriver' + _extension())) 
+
+path = 'rates.csv'

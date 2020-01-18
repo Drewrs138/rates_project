@@ -4,15 +4,9 @@ import time
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from constants import DRIVER_PATH
+from constants import path
 from selenium.webdriver.support.ui import Select
 
-
-city = 'Los Angeles'
-county = 'Los Angeles'
-two_l_state = 'CA'
-credit_score = 'Very Good'
-state = 'california'
-path = pass  # define path
 
 with open(path, mode="a") as rates:
         writer = csv.writer(rates)
@@ -145,6 +139,7 @@ def get_nbkc(down_payment, principal_amount, state, credit_score):
     driver.close()
     write_csv(path, "nbkc", thirty_y)
 
+
 def get_bank_of_america(principal_amount, down_payment):
      """scrape bank of america and get their 30y mortgage rate"""
     get_driver("https://www.bankofamerica.com/mortgage/mortgage-rates/")
@@ -160,6 +155,7 @@ def get_bank_of_america(principal_amount, down_payment):
     thirty_y = rates[1].text  # get the 2nd text as its the 30y 
     driver.close()
     write_csv(path, "bank of america", thirty_y)
+
 
 def get_wells_fargo():
     """scrape wells fargo and get their 30y rate"""
