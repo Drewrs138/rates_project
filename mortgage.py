@@ -25,12 +25,9 @@ def extension():
 
 
 driver_path = os.path.join(os.getcwd(), ('chromedriver' + extension()))  # get directory in which python script and webdriver are and get the right format for chrome webdriver
-<<<<<<< HEAD
 
 driver = Chrome(driver_path, options=chrome_options)
 
-=======
->>>>>>> 232173bfafecd89fa44658d4b82cd84c014df766
 
 url = "https://www.bankofamerica.com/mortgage/mortgage-rates/"
 
