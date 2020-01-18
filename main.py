@@ -1,6 +1,6 @@
 from get_banks import *
 
-"""functions inputs"""
+"""functions arguments"""
 principal_amount = input("enter the principal amount: ")  
 down_payment = input("enter the down payment: ")
 city = 'Los Angeles'
