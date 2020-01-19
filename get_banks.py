@@ -14,8 +14,10 @@ city = 'Los Angeles'
 county = 'Los Angeles'
 two_l_state = 'California (CA)'
 credit_score_schwab = 'Very Good (720-759)'
-state = 'california'
+state = 'California'
 zip_code = "23452"  # to be defined
+credit_score_nbkc = 'Very Good (720 - 739)'
+
 
 with open(path, mode="a") as rates:
         writer = csv.writer(rates)
@@ -91,7 +93,7 @@ def get_hsbc(down_payment, principal_amount):
     """scrape hsbc bank and get their 30y mortgage rate"""
     get_driver('https://www.us.hsbc.com/home-loans/products/mortgage-rates/#preapproved')
     loan_amount = float(principal_amount) - float(down_payment) 
-    if 200000 < loan_amount < 400000:
+    if 200000 < loan_amount <= 400000:
         thirty_y = driver.find_element_by_xpath('//*[@id="content_main_tile_1"]/div[2]/p')
         thirty_y = thirty_y.text
         thirty_y = thirty_y.split('|')  
@@ -136,9 +138,9 @@ def get_schwab(down_payment, principal_amount, zip_code, credit_score_schwab):
     write_csv(path, "charles schwab", thirty_y)
 
 
-def get_nbkc(down_payment, principal_amount, state, credit_score):
+def get_nbkc(down_payment, principal_amount, state, credit_score_nbkc):
     """scrape nbkc bank and get their 30y mortgage rate"""
-    get_driver('https://www.schwab.com/public/schwab/banking_lending/mortgage_rate_calculator')
+    get_driver('https://www.nbkc.com/home-loans')
     loan_kind = driver.find_element_by_xpath('//*[@id="check-rates-form"]/div[1]/div[2]/label[1]')
     loan_kind.click()
     home_value = driver.find_element_by_xpath('//*[@id="home-value"]')
@@ -151,6 +153,7 @@ def get_nbkc(down_payment, principal_amount, state, credit_score):
     credit_score.select_by_visible_text(credit_score)
     see_rates = driver.find_element_by_xpath('//*[@id="check-rates-form"]/div[5]/button')
     see_rates.click()
+    time.sleep(3)
     thirty_y = driver.find_element_by_xpath('//*[@id="30-year-fixed"]/div/div[2]/div[7]/div[2]/span')
     thirty_y = thirty_y.text
     driver.close()
@@ -182,4 +185,10 @@ def get_wells_fargo():
     thirty_y = thirty_y.text
     write_csv(path, "wells fargo", thirty_y)
 
-get_schwab(down_payment, principal_amount, zip_code, credit_score_schwab)
+# get_schwab(down_payment, principal_amount, zip_code, credit_score_schwab)
+
+# get_nbkc(down_payment, principal_amount, state, credit_score_nbkc)
+
+#  get_wells_fargo()
+
+get_citi(down_payment, principal_amount, city, county, two_l_state)
