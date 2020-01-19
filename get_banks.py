@@ -7,6 +7,15 @@ from constants import DRIVER_PATH
 from constants import path
 from selenium.webdriver.support.ui import Select
 
+"""functions arguments"""
+principal_amount = input("enter the principal amount: ")  
+down_payment = input("enter the down payment: ")
+city = 'Los Angeles'
+county = 'Los Angeles'
+two_l_state = 'California (CA)'
+credit_score = 'Very Good'
+state = 'california'
+zip_code = ""  # to be defined
 
 with open(path, mode="a") as rates:
         writer = csv.writer(rates)
@@ -15,12 +24,13 @@ with open(path, mode="a") as rates:
 
 def get_driver(url):
     """driver for the desired bank"""
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")  # option to not open browser when scraping 
-    driver = Chrome(DRIVER_PATH, options=chrome_options)
+    # chrome_options = Options()
+    # chrome_options.add_argument("--headless")  # option to not open browser when scraping 
+    global driver
+    # driver = Chrome(DRIVER_PATH, options=chrome_options)
+    driver = Chrome(DRIVER_PATH)
     driver.get(url)
     time.sleep(3)
-    return driver
 
 
 def write_csv(path, bank, thirty_y):  # append rates and bank to the csv file
@@ -35,7 +45,7 @@ def get_ally_bank():
     """scrape ally bank and get their 30y mortgage rate"""
     get_driver('https://www.ally.com/home-loans/mortgage/')
     thirty_y = driver.find_element_by_xpath('//*[@id="rates"]/div[2]/div/figure/table/tbody/tr[1]/td[4]')  # find 30 y rate 
-    thirty_y.text
+    thirty_y = thirty_y.text
     driver.close()
     write_csv(path, "ally bank", thirty_y)
     
@@ -45,13 +55,13 @@ def get_citi(down_payment, principal_amount, city, county, two_l_state):
     get_driver('https://online.citi.com/US/nccmi/purchase/ratequote/flow.action?fromLanding=true&selectedOption=CUSTOM&selectedOptionValue=CUSTOMpurChaseLanding&JFP_TOKEN=H49AIYPN')
     property_use = Select(driver.find_element_by_xpath('//*[@id="propertyUse"]'))
     property_use.select_by_visible_text('I will live in this home')  # used to select a drop down menu value
-    cnty = Select(driver.find_element_by_xpath('//*[@id="propCounty"]'))  # select county
-    cnty.select_by_visible_text(county)
     cty = driver.find_element_by_xpath('//*[@id="propCity"]')  # select city
     cty.clear()
     cty.send_keys(city)
     stte = Select(driver.find_element_by_xpath('//*[@id="propState"]'))  # select state
     stte.select_by_visible_text(two_l_state)
+    cnty = Select(driver.find_element_by_xpath('//*[@id="propCounty"]'))  # select county
+    cnty.select_by_visible_text(county)
     purchase_price = driver.find_element_by_xpath('//*[@id="purchPrice"]')
     purchase_price.clear()
     purchase_price.send_keys(principal_amount)
@@ -60,8 +70,10 @@ def get_citi(down_payment, principal_amount, city, county, two_l_state):
     loan_amount.send_keys(str(float(principal_amount) - float(down_payment)))  # convert string vars to floats to be able to substract then back to string
     credit_score = driver.find_element_by_xpath('//*[@id="creditScoreGoodLabel"]')
     credit_score.click()
+    button_mortgage_options = driver.find_element_by_xpath('//*[@id="submit-purchase"]')
+    button_mortgage_options.click()
     thirty_y = driver.find_element_by_xpath('//*[@id="FeaturedProducts-container"]/div[1]/div/div[1]/div/div/div/div/div/div/div/div/div[2]/div/div[2]/div[2]/div/p[2]')
-    thirty_y.text
+    thirty_y = thirty_y.text
     driver.close()
     write_csv(path, "citi bank", thirty_y)
 
@@ -70,7 +82,7 @@ def get_us_bank():
     """scrape us bank and get their 30y mortgage rate"""
     get_driver('https://www.usbank.com/home-loans/mortgage/conventional-fixed-rate-mortgages.html')
     thirty_y = driver.find_element_by_xpath('//*[@id="mortgagesRateTable"]/div/div/div/div[3]/table/tbody/tr[2]/td[2]')  # find 30y rate
-    thirty_y.text
+    thirty_y = thirty_y.text
     driver.close()
     write_csv(path, "us bank", thirty_y)
 
@@ -81,16 +93,18 @@ def get_hsbc(down_payment, principal_amount):
     loan_amount = float(principal_amount) - float(down_payment) 
     if 200000 < loan_amount < 400000:
         thirty_y = driver.find_element_by_xpath('//*[@id="content_main_tile_1"]/div[2]/p')
-        thirty_y.text
-        thirty_y.split('|')  
+        thirty_y = thirty_y.text
+        thirty_y = thirty_y.split('|')  
         thirty_y = thirty_y[1]  # get the correct rate as the string displays two interest rates
-        thirty_y.strip('% APR')
+        thirty_y = thirty_y.strip('% APR')
+        driver.close()
+        write_csv(path, "hsbc", thirty_y)
     elif loan_amount > 400000:
         thirty_y = driver.find_element_by_xpath('//*[@id="content_main_tile_7"]/div[2]/p/span')
-        thirty_y.text
-        thirty_y.strip("% APR") 
-    driver.close()
-    write_csv(path, "hsbc", thirty_y)
+        thirty_y = thirty_y.text
+        thirty_y = thirty_y.strip("% APR") 
+        driver.close()
+        write_csv(path, "hsbc", thirty_y)
 
 
 def get_schwab(down_payment, principal_amount, zip_code, credit_score):
@@ -114,7 +128,7 @@ def get_schwab(down_payment, principal_amount, zip_code, credit_score):
     get_results.click()  # the previous code fills the form to get the interest rate
     time.sleep(11)
     thirty_y = driver.find_element_by_xpath('//*[@id="tab_fixed"]/div[2]/div[2]/div[2]/div[2]/div[3]/span[2]')
-    thirty_y.text
+    thirty_y = thirty_y.text
     driver.close()
     write_csv(path, "charles schwab", thirty_y)
 
@@ -135,13 +149,13 @@ def get_nbkc(down_payment, principal_amount, state, credit_score):
     see_rates = driver.find_element_by_xpath('//*[@id="check-rates-form"]/div[5]/button')
     see_rates.click()
     thirty_y = driver.find_element_by_xpath('//*[@id="30-year-fixed"]/div/div[2]/div[7]/div[2]/span')
-    thirty_y.text
+    thirty_y = thirty_y.text
     driver.close()
     write_csv(path, "nbkc", thirty_y)
 
 
 def get_bank_of_america(principal_amount, down_payment):
-     """scrape bank of america and get their 30y mortgage rate"""
+    """scrape bank of america and get their 30y mortgage rate"""
     get_driver("https://www.bankofamerica.com/mortgage/mortgage-rates/")
     text_areas_one = driver.find_element_by_id('purchase-price-input-medium')  # find text are of mortgage principal amount
     text_areas_one.clear()  # clear it
@@ -161,5 +175,8 @@ def get_wells_fargo():
     """scrape wells fargo and get their 30y rate"""
     get_driver('https://www.wellsfargo.com/mortgage/rates/')
     thirty_y = driver.find_element_by_xpath('//*[@id="PurchaseRatesTable"]/tbody/tr[2]/td[2]')
-    thirty_y.text
+    driver.close()
+    thirty_y = thirty_y.text
     write_csv(path, "wells fargo", thirty_y)
+
+get_hsbc(down_payment, principal_amount)

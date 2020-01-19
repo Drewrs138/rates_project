@@ -10,7 +10,7 @@ credit_score = 'Very Good'
 state = 'california'
 zip_code = ""  # to be defined
 
-======================================================================================================
+'======================================================================================================'
 
 """calling functions"""
 functions_list = [get_ally_bank(), get_citi(down_payment, principal_amount, city, county, two_l_state),
