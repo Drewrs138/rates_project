@@ -13,9 +13,9 @@ down_payment = input("enter the down payment: ")
 city = 'Los Angeles'
 county = 'Los Angeles'
 two_l_state = 'California (CA)'
-credit_score = 'Very Good'
+credit_score_schwab = 'Very Good (720-759)'
 state = 'california'
-zip_code = ""  # to be defined
+zip_code = "23452"  # to be defined
 
 with open(path, mode="a") as rates:
         writer = csv.writer(rates)
@@ -107,17 +107,20 @@ def get_hsbc(down_payment, principal_amount):
         write_csv(path, "hsbc", thirty_y)
 
 
-def get_schwab(down_payment, principal_amount, zip_code, credit_score):
+def get_schwab(down_payment, principal_amount, zip_code, credit_score_schwab):
     """scrape schwab bank and get their 30y mortgage rate"""
     get_driver('https://www.schwab.com/public/schwab/banking_lending/mortgage_rate_calculator')
-    loan_purpose = driver.Select(find_element_by_xpath('//*[@id="calc_LoanPurpose"]'))
+    driver.execute_script("window.scrollTo(0, window.scrollY + 640)")  # scroll down a little
+    loan_purpose = Select(driver.find_element_by_xpath('/html/body/div[2]/form/div[1]/span/select'))
     loan_purpose.select_by_visible_text('Purchase')
+    time.sleep(1)
     purchase_price = driver.find_element_by_xpath('//*[@id="calc_PurchasePrice"]')
     purchase_price.send_keys(principal_amount)
     down_pay = driver.find_element_by_xpath('//*[@id="calc_DownPayment"]')
     down_pay.send_keys(down_payment)
     zip_c = driver.find_element_by_xpath('//*[@id="calc_Zip"]')
     zip_c.send_keys(zip_code)
+    time.sleep(2)
     property_use = Select(driver.find_element_by_xpath('//*[@id="calc_OccupancyType"]'))
     property_use.select_by_visible_text('Primary')
     property_type = Select(driver.find_element_by_xpath('//*[@id="calc_PropertyType"]'))
@@ -179,4 +182,4 @@ def get_wells_fargo():
     thirty_y = thirty_y.text
     write_csv(path, "wells fargo", thirty_y)
 
-get_hsbc(down_payment, principal_amount)
+get_schwab(down_payment, principal_amount, zip_code, credit_score_schwab)
